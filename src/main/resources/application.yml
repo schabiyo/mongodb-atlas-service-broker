@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/schabiyo/mongodb-atlas-service-broker
+          searchPaths: catalog-config
+          force-pull: true
+          skipSslValidation: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
