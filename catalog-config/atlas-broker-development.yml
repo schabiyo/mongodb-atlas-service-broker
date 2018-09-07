@@ -18,16 +18,16 @@ spring:
             name: M2
             description: M2 tier
         - id: GCP-service
-            name: GCP
-            description: A simple example
-            bindable: true
-            tags:
-            - example
-            - tags
-            plans:
-            - id: simple-plan
-              name: standard
-              description: A simple plan
-            - id: simple-plan
-              name: standard
-              description: A simple plan
+          name: GCP
+          description: A simple example
+          bindable: true
+          tags:
+          - example
+          - tags
+          plans:
+          - id: simple-plan
+            name: standard
+            description: A simple plan
+          - id: simple-plan
+            name: standard
+            description: A simple plan
