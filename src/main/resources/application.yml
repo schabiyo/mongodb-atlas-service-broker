@@ -5,12 +5,16 @@ spring:
     show-sql: true
   cloud:
     config:
+      enabled: true
+      uri: http://localhost:8080
       server:
         git:
           uri: https://github.com/schabiyo/mongodb-atlas-service-broker
           searchPaths: catalog-config
           force-pull: true
           skipSslValidation: true
+
+
 
 management:
   endpoints:
