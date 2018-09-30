@@ -1,0 +1,10 @@
+{
+  "diskSizeGB" : 160,
+  "numShards" : 1,
+  "providerSettings" : {
+    "providerName" : "TENANT",
+    "backingProviderName" : "AWS",
+    "instanceSizeName" : "M5",
+    "regionName" : "US_EAST_1"
+  }
+}
