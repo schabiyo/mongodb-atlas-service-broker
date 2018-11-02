@@ -8,7 +8,7 @@ This base application is intended to demonstrate a service broker implemenation 
 ![](imgs/broker.png)
 
 
-Please note that the service broker is currently in public beta. Please do not use it in production yet. Your feedback is welcome! 
+Please note that the service broker was builkt for demonstration purpose. Use in production at your own risk. Your feedback is however welcome to improve it! 
 
 
 ## Getting Started
@@ -29,7 +29,7 @@ One of the main thing you migh want to configure here is the MongoDB Atlas tiers
 
 1. Define the service catalog
 
-This is done within the application.yml, using the spring.openservicebroker.catalog property. In the example below, only one service with 4 differents plans will be advertised. In this context each plan will translate to a Tier in MongoDB Atlas.
+This is done within the application.yml, using the spring.openservicebroker.catalog property. In the example below, only one service with 4 differents plans will be advertised. In this context each plan will translate to a tier in MongoDB Atlas.
 
 ```
 
@@ -61,13 +61,20 @@ catalog:
             name: aws-global_cluster
             bindable: true
             description: Please use this for any Production deploiement that requires global cluster. It includes 2 zones in US_EAST and US_CENTRAL
-
-
 ```
+
+Here we are defining a service that will provision cluster on AWS using Atlas, and that service has 4 different plans for 4 differents type of usage:
+- Dev  
+- QA
+- Production
+- Production that require Global cluster
+
+You can add new services, new plans as you wish here, it does not make any difference. For example you might want to include deployment in GCP or Azure, or create various T-shirt size for each of your environments.
+
 
 2. Provide provisioning details for each plan
 
-In this section, you will have to provide the REST API JSON message that will be used to provision the environment on Atlas. Each plan will be associated with a JSON file that is named after the plan ID, this is very important, that how the service broker knows with JSON message to send over.
+In this section, you will have to provide the REST API JSON message that will be used to provision the environment on Atlas. Each plan will be associated with a JSON file that is named after the plan ID, this is very important, that how the service broker knows with JSON message to send over. Fo every plan defined in section 1. abaove the corresponding json file need to exist.
 
 
 
