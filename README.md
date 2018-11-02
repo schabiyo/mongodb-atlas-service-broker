@@ -5,6 +5,9 @@ Base application to demonstrate MongoDB Atlas Service Broker
 ## Introduction
 This base application is intended to demonstrate a service broker implemenation for MongoDB Atlas. Itr allows to easily provision clusters in MongoDB Atlas from PCF marketplace. 
 
+![](imgs/broker.png)
+
+
 Please note that the service broker is currently in public beta. Please do not use it in production yet. Your feedback is welcome! 
 
 
@@ -18,6 +21,7 @@ Please note that the service broker is currently in public beta. Please do not u
 
 **Configuring the catalog**
 
+One of the main thing you migh want to configure here is the MongoDB Atlas tiers you want the service broker to expose 
 
 **Building**
 ```
