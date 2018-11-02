@@ -14,27 +14,31 @@ import org.slf4j.Logger;
 import org.json.*;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
 import org.apache.http.HttpHost;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import io.pivotal.spring.cloud.service.config.PlainTextConfigClient;
 
 import java.io.*;
-import java.nio.charset.Charset;
 
 @Component
 @Configuration
 public class AtlasClient {
 
     private static final Logger log = LoggerFactory.getLogger(AtlasClient.class);
-    private String orgId ="5a9d32f20bd66b47765d52bf";
-    private String apiKey ="32b5cf8e-4535-4746-8e8b-b1ede3c6fbfd";
-    final String rootEndpoint = "https://cloud.mongodb.com/api/atlas/v1.0";
+
+    @Value("${mongodb.atlas.rootEndpoint}")
+    private String rootEndpoint;
+
+    @Value("${mongodb.atlas.apiKey}")
+    private String apiKey;
+
+    @Value("${mongodb.atlas.orgId}")
+    private String orgId;
 
     @Autowired
     ServiceInstanceRepository instanceRepository;

@@ -3,7 +3,7 @@ Base application to demonstrate MongoDB Atlas Service Broker
 
 
 ## Introduction
-This base application is intended to demonstrate a service broker implemenation for MongoDB Atlas. Itr allows to easily provision clusters in MongoDB Atlas from PCF marketplace. 
+This base application is intended to demonstrate a service broker implemenation for MongoDB Atlas. It allows to easily provision clusters in MongoDB Atlas from PCF marketplace. 
 
 ![](imgs/broker.png)
 
@@ -27,9 +27,19 @@ One of the main thing you migh want to configure here is the MongoDB Atlas tiers
 ![](imgs/ressource.png)
 
 
-1. Define the service catalog
+1. Define MongoDB Atlas target
 
-This is done within the application.yml, using the spring.openservicebroker.catalog property. In the example below, only one service with 4 differents plans will be advertised. In this context each plan will translate to a tier in MongoDB Atlas.
+Here weed to to tell the service broker how to communicate with MongoDB Atlas and how to automatically provision clusters. In the application.yml, confgure the following 3 properties to target your Atlas environment.
+
+![](imgs/config.png)
+
+You can check Here on how to generate your Atlas API key.
+
+This implementation of the service broker assume each requested cluster will live in its own project and all clusters will live inside one organization. In case you have a different structure in mind the source code can be changed accordingly.
+
+2. Define the service catalog
+
+Still within the application.yml, using the spring.openservicebroker.catalog property. In the example below, only one service with 4 differents plans will be advertised. In this context each plan will translate to a tier in MongoDB Atlas.
 
 ```
 
@@ -69,10 +79,11 @@ Here we are defining a service that will provision cluster on AWS using Atlas, a
 - Production
 - Production that require Global cluster
 
-You can add new services, new plans as you wish here, it does not make any difference. For example you might want to include deployment in GCP or Azure, or create various T-shirt size for each of your environments.
+
+The beauty here, is that this is a very flexible configuration, as you can add new services, new plans as you wish here, it does not make any difference. For example you might want to include deployment in GCP or Azure, or create various T-shirt size for each of your environments.
 
 
-2. Provide provisioning details for each plan
+3. Provide provisioning details for each plan
 
 In this section, you will have to provide the REST API JSON message that will be used to provision the environment on Atlas. Each plan will be associated with a JSON file that is named after the plan ID, this is very important, that how the service broker knows with JSON message to send over. Fo every plan defined in section 1. abaove the corresponding json file need to exist.
 
@@ -85,7 +96,7 @@ $ cd [REPO]
 $ mvn clean install
 ``` 
 
-### Running on Cloud Foundry
+### Installing on Cloud Foundry
 The application is set to use an embedded H2 database and to take advantage of Pivotal CF's auto-configuration for services. To use a MySQL Dev service in PCF, simply create and bind a service to the app and restart the app. No additional configuration is necessary.
 
 Before deploying thge application, take a look at the manifest file for the recommended setting. Adjust them as per your environment.
