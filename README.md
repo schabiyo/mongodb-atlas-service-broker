@@ -15,6 +15,7 @@ Please note that the service broker was builkt for demonstration purpose. Use in
 
 **Prerequisites**
 - Cloud Foundry CLI
+- A PCF environment, you can also use PCF Dev
 - Git Client
 - Java SE Development Kit
 - Maven
@@ -100,11 +101,33 @@ The application is set to use an embedded H2 database and to take advantage of P
 
 Before deploying thge application, take a look at the manifest file for the recommended setting. Adjust them as per your environment.
 
-After connection to your PCF environment.
+After connection to your PCF environment. I'm using [PCF Dev](https://pivotal.io/pcf-dev) as environment
+
+
+**Deploy the service broker app**
+
+
 ```
 $ cd [REPO]
 $ cf push
 ```
 
+**Create Service Broker using CF CLI**
 
+Using the URL of the just deployed app, create the service broker.
 
+```
+$ cf create-service-broker atlas admin supersecret http://atlas-broker.local.pcfdev.io
+```
+
+**Enable Marketplace access to Atlas Broker**
+
+```
+$ cf enable-service-access mongodb-atlas-aws
+```
+
+**Validate that the service is shown in the Marketplace**
+
+```
+$ cf emarketplace
+```
