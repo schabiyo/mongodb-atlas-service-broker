@@ -19,7 +19,7 @@ Please note that the service broker was builkt for demonstration purpose. Use in
 - Java SE Development Kit
 - Maven
 
-###Configuring the catalog###
+### Configuring the catalog ###
 
 One of the main thing you migh want to configure here is the MongoDB Atlas tiers you want the service broker to expose. Two file need to be updated for that.
 
