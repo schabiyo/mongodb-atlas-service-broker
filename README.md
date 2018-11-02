@@ -85,7 +85,7 @@ The beauty here, is that this is a very flexible configuration, as you can add n
 
 **3. Provide provisioning details for each plan**
 
-In this section, you will have to provide the REST API JSON message that will be used to provision the environment on Atlas. Each plan will be associated with a JSON file that is named after the plan ID, this is very important, that how the service broker knows with JSON message to send over. For every plan defined in section 2. abaove the corresponding json file need to exist. Check [HERE] (https://docs.atlas.mongodb.com/reference/api/clusters-create-one/)  for all possible configuration parameters.
+In this section, you will have to provide the REST API JSON message that will be used to provision the environment on Atlas. Each plan will be associated with a JSON file that is named after the plan ID, this is very important, that how the service broker knows with JSON message to send over. For every plan defined in section 2. abaove the corresponding json file need to exist. Check [HERE](https://docs.atlas.mongodb.com/reference/api/clusters-create-one/)  for all possible configuration parameters.
 
 
 

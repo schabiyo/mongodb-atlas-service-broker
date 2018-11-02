@@ -1,8 +1,9 @@
 mongodb:
   atlas:
      rootEndpoint: https://cloud.mongodb.com/api/atlas/v1.0
-     orgId: 5a9d32f20bd66b47765d52bf
-     apiKey: 32b5cf8e-4535-4746-8e8b-b1ede3c6fbfd
+     orgId: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+     apiKey: xxxxxxx-xxxx-xxxx-xxxxx-xxxxxxx
+     username: sani.chabi-yo
 
 
 spring:
