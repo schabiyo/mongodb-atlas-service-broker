@@ -1,0 +1,6 @@
+---
+applications:
+- name: atlas-broker
+  memory: 1G
+  path: ./target/atlas-broker-0.0.1-SNAPSHOT.jar
+

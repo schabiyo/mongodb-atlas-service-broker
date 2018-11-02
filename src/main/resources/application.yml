@@ -2,7 +2,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
   cloud:
     config:
       enabled: true
@@ -13,10 +13,39 @@ spring:
           searchPaths: catalog-config
           force-pull: true
           skipSslValidation: true
-
-
+    openservicebroker:
+      catalog:
+        services:
+        - id: Atlas_AWS
+          name: mongodb-atlas-aws
+          description: MongoDB Atlas Service on AWS
+          bindable: true
+          tags:
+          - MongoDB
+          - Atlas
+          - AWS
+          plans:
+          - id: aws-dev
+            name: aws-dev
+            bindable: true
+            free: true
+            description: Please use this for Dev (This is a multinenant environment)
+          - id: aws-qa
+            name: aws-qa
+            bindable: true
+            description: Please use this for Qa
+          - id: aws-prod
+            name: aws-prod
+            bindable: true
+            description: Please use this for any Production deploiement
+          - id: aws-global_cluster
+            name: aws-global_cluster
+            bindable: true
+            description: Please use this for any Production deploiement that requires global cluster. It includes 2 zones in US_EAST and US_CENTRAL
 
 management:
+  security:
+    enabled: false
   endpoints:
     web:
       exposure:

@@ -6,10 +6,10 @@ import org.springframework.cloud.servicebroker.model.catalog.ServiceDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+//@Configuration
 public class AtlasCatalogConfiguration {
 
-    @Bean
+    //@Bean
     public Catalog catalog() {
         Plan plan = Plan.builder()
                 .id("simple-plan")

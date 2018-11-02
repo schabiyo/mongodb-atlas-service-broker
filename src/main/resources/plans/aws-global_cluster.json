@@ -1,0 +1,33 @@
+{
+  "diskSizeGB": 160,
+  "providerSettings": {
+    "providerName": "AWS",
+    "diskIOPS": 480,
+    "instanceSizeName": "M30"
+  },
+  "replicationSpecs": [{
+    "zoneName": "Zone 1",
+    "numShards": 2,
+    "regionsConfig": {
+      "US_EAST_1": {
+        "electableNodes": 3,
+        "readOnlyNodes": 0,
+        "priority": 7
+      }
+    }
+  },
+    {
+      "zoneName": "Zone 2",
+      "numShards": 2,
+      "regionsConfig": {
+        "EU_CENTRAL_1": {
+          "electableNodes": 3,
+          "readOnlyNodes": 0,
+          "priority": 7
+        }
+      }
+    }],
+  "backupEnabled": false,
+  "providerBackupEnabled" : false,
+  "clusterType": "GEOSHARDED"
+}
