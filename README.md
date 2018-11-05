@@ -157,4 +157,10 @@ $ cf service mongo-dev
 ![](imgs/service_state.png)
 
 
+What happened here is that The Service Broker automatically provisioned a cluster for the user.
+
 **bind to a service instance**
+
+Now the next step is make use of the newly created cluster. One of the operations supported by the Open Service Broker specification in nammed: bind. The implementation can varie from a Service broker to another but in our case here, the Service Broker for Atlas will create a new databse user and return it to the developper along with the cluster's connection URI. 
+
+To demonstrate this, we will use the reference application spring-music.
