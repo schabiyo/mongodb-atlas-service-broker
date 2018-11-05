@@ -139,8 +139,22 @@ $ cf marketplace
 
 ![](imgs/markeplace.png)
 
-**create a service key**
+**create a service instance**
 
 ```
-$ cf marketplace
+$ cf create-service mongodb-atlas-aws aws-dev mongo-dev 
 ```
+
+![](imgs/create_service.png)
+
+
+This is an asynchronous process, you can run the followin command to check the provisioning state:
+
+```
+$ cf service mongo-dev 
+```
+
+![](imgs/service_state.png)
+
+
+**bind to a service instance**

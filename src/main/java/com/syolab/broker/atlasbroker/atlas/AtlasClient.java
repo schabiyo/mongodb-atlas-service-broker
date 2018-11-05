@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.*;
 import org.apache.http.HttpHost;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -26,35 +27,41 @@ import org.springframework.web.client.RestTemplate;
 import java.io.*;
 
 @Component
-@Configuration
+@PropertySource("classpath:application.yml")
 public class AtlasClient {
 
     private static final Logger log = LoggerFactory.getLogger(AtlasClient.class);
 
-    @Value("${mongodb.atlas.rootEndpoint}")
-    private String rootEndpoint;
+    final private String dashBoardUrlPrefix = "https://cloud.mongodb.com/v2/";
+    final private String rootEndpoint;
 
-    @Value("${mongodb.atlas.apiKey}")
-    private String apiKey;
+    final private String apiKey;
 
-    @Value("${mongodb.atlas.orgId}")
     private String orgId;
+
+    private String userName;
 
     @Autowired
     ServiceInstanceRepository instanceRepository;
 
-   // @Autowired
-  //  PlainTextConfigClient configClient;
-
 
     final RestTemplate restTemplate;
 
-    AtlasClient() {
+    @Autowired
+    AtlasClient(@Value("${mongodb.atlas.rootEndpoint}") final String rootEndpoint,
+                @Value("${mongodb.atlas.username}") final String userName,
+                @Value("${mongodb.atlas.apiKey}") final String apiKey,
+                @Value("${mongodb.atlas.orgId}") final String orgId) {
+
+        this.rootEndpoint = rootEndpoint;
+        this.apiKey = apiKey;
+        this.userName = userName;
+        this.orgId = orgId;
 
         HttpHost host = new HttpHost(rootEndpoint);
         CredentialsProvider provider = new BasicCredentialsProvider();
         UsernamePasswordCredentials credentials =
-                new UsernamePasswordCredentials("sani.chabi-yo", apiKey);
+                new UsernamePasswordCredentials(userName, apiKey);
 
         provider.setCredentials(AuthScope.ANY, credentials);
         CloseableHttpClient client = HttpClientBuilder.create().
@@ -67,7 +74,7 @@ public class AtlasClient {
 
 
     public String createProject(String projectName, String orgId) throws AtlasException {
-        log.info("Creating a new Project: " + projectName);
+        log.info("Creating a new Project: " + projectName + ",orgId:" +orgId);
         String resourceUrl = rootEndpoint + "/groups?pretty=true";
         JSONObject json = new JSONObject();
         json.put("name", projectName);
@@ -80,11 +87,11 @@ public class AtlasClient {
             log.info("Status Code = " + response.getStatusCode());
             log.info("Response: " + new JSONObject(response));
             String body = new JSONObject(response).getString("body");
-            log.info("Body: " + body);
             JSONObject jsonObj = new JSONObject(body);
             return jsonObj.getString("id");
         }catch (HttpClientErrorException exception){
             log.error(exception.getStatusText());
+            exception.printStackTrace();
             throw new AtlasException(exception.getMessage(),exception);
         }
 
@@ -111,12 +118,6 @@ public class AtlasClient {
 
             org.json.simple.JSONObject request = ( org.json.simple.JSONObject) parser.parse(inr);
 
-            //InputStream input = configClient.getConfigFile("Prod-plan.json").getInputStream();
-           // log.info(StreamUtils.copyToString(input, Charset.defaultCharset()));
-
-           // JSONObject request = (JSONObject) parser.parse( new FileReader("/plans/".concat(planId).concat(".json")));
-
-
             request.put("name",instanceId);
 
             log.info("request : " + request);
@@ -125,18 +126,17 @@ public class AtlasClient {
             JSONObject clusterInfo = new JSONObject(response.getBody());
             log.info("clusterInfo: " + clusterInfo);
             String groupId = clusterInfo.getString("groupId");
-            String dashboardUrl = new String("https://cloud.mongodb.com/api/atlas/v1.0/groups/")
-                     .concat(groupId);
+            String dashboardUrl = dashBoardUrlPrefix.concat(groupId).concat("#clusters");
             String clusterUrl = rootEndpoint.concat("/groups/").concat(groupId).concat("/clusters/").concat(instanceId);
             return new  ClusterInfo(null,clusterUrl,dashboardUrl);
         }catch (ParseException e){
+            log.error(e.getMessage());
             e.printStackTrace();
-            System.out.println("Unable to load the plan details: " + planId);
             throw new AtlasException("Unable to load the plan definition:" + planId, e);
         }
         catch (IOException e){
+            log.error(e.getMessage());
             e.printStackTrace();
-            System.out.println("Unable to load the plan details: " + planId);
             throw new AtlasException("Unable to load the plan definition:" + planId, e);
         }
         catch(HttpClientErrorException exception){
@@ -235,10 +235,6 @@ public class AtlasClient {
         request.put("password",password);
         request.put("groupId",projectId);
 
-        //RoleUserAdmin,
-        //RoleDBAdmin
-        //RoleReadWrite,
-
         JSONObject dbRole = new JSONObject();
         dbRole.put("databaseName","admin");
         dbRole.put("roleName","atlasAdmin");
@@ -282,52 +278,5 @@ public class AtlasClient {
 
     }
 
-    public boolean createAtlasUser(String projectId, String username, String password) throws AtlasException{
-
-        log.info("Creating a new User: " + projectId + "," +  username + "," + password);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String resourceUrl = rootEndpoint + "/users";
-        log.info("resourceUrl = " + resourceUrl);
-
-        JSONObject request = new JSONObject();
-        JSONArray roles = new JSONArray();
-        request.put("username",username);
-        request.put("password","Zy43tt36!");
-        request.put("emailAddress","sani.chabi-yo@mongdb.com");
-        request.put("mobileNumber","2125550198");
-        request.put("firstName","Jon");
-        request.put("lastName","Doe");
-        request.put("country","US");
-
-
-        JSONObject orgRole = new JSONObject();
-        orgRole.put("orgId",orgId);
-        orgRole.put("roleName","ORG_MEMBER");
-
-
-        JSONObject projectRole = new JSONObject();
-        projectRole.put("groupId",projectId);
-        projectRole.put("roleName","GROUP_OWNER");
-
-        roles.put(orgRole);
-        roles.put(projectRole);
-
-        request.put("roles",roles);
-
-        log.info("request:" +  request);
-        try {
-            HttpEntity<String> httpEntity = new HttpEntity<String>(request.toString(), headers);
-            ResponseEntity<String> response = restTemplate.postForEntity(resourceUrl, httpEntity, String.class);
-            log.info("Status Code = " + response.getStatusCode());
-            log.info("Response: " + response);
-            //Construct Dashboard URL
-            return true;
-        }catch(HttpClientErrorException exception){
-            exception.printStackTrace();
-            throw new AtlasException(exception.getMessage(),exception);
-        }
-
-    }
 
 }

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.servicebroker.exception.ServiceBrokerException;
 import org.springframework.cloud.servicebroker.exception.ServiceBrokerInvalidParametersException;
 import org.springframework.cloud.servicebroker.exception.ServiceInstanceDoesNotExistException;
@@ -31,8 +32,10 @@ public class AtlasServiceInstanceService implements ServiceInstanceService {
     @Autowired
     private ServiceInstanceRepository instanceRepository;
 
+
     @Override
     public CreateServiceInstanceResponse createServiceInstance(CreateServiceInstanceRequest request) {
+
         String instanceId = request.getServiceInstanceId();
         System.out.println("instanceId="+instanceId);
         System.out.println("request="+request.toString());
