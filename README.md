@@ -126,8 +126,19 @@ $ cf create-service-broker atlas admin supersecret http://atlas-broker.local.pcf
 $ cf enable-service-access mongodb-atlas-aws
 ```
 
+![](imgs/enable_broker.png)
+
 **Validate that the service is shown in the Marketplace**
 
 ```
-$ cf emarketplace
+$ cf marketplace
+```
+
+
+![](imgs/markeplace.png)
+
+**create a service key**
+
+```
+$ cf marketplace
 ```
