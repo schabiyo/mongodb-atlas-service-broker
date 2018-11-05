@@ -120,7 +120,7 @@ Using the URL of the just deployed app, create the service broker.
 $ cf create-service-broker atlas admin supersecret http://atlas-broker.local.pcfdev.io
 ```
 
-![](imgs/create-service.png)
+![](imgs/create_service.png)
 
 **Enable Marketplace access to Atlas Broker**
 
