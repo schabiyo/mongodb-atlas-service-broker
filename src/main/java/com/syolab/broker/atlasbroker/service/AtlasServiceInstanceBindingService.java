@@ -31,9 +31,10 @@ public class AtlasServiceInstanceBindingService  implements ServiceInstanceBindi
     private static final String DATABASE_KEY = "database";
     private static final String DATABASE_KEY2 = "dbname";
     private static final String DATABASE_KEY3 = "db";
+    private static final String MONGODB_URI_KEY = "mongodbUri";
     private static final String URI_KEY = "uri";
 
-    private static final String DEFAULT_DATABASE = "default";
+    private static final String DEFAULT_DATABASE = "test";
 
     private static final Logger log = LoggerFactory.getLogger(AtlasServiceInstanceBindingService.class);
 
@@ -128,15 +129,19 @@ public class AtlasServiceInstanceBindingService  implements ServiceInstanceBindi
 
         JSONObject response = atlasClient.getCluster(serviceInstance.get().getLink());
         String projectId = atlasClient.getProjectId(response);
-        String uri = atlasClient.getClusterURI(response);
+        String svrAddress = atlasClient.getClusterURI(response);
+
+        log.info("svrAddress::" + svrAddress);
+        String password = userGenerator.generatePassword();
 
         Map<String, Object> credentials = new HashMap<>();
-        credentials.put(URI_KEY,uri);
+        credentials.put(URI_KEY,svrAddress.concat("/test?retryWrites=true"));
         credentials.put(USERNAME_KEY, instanceId);
-        credentials.put(PASSWORD_KEY, userGenerator.generatePassword());
+        credentials.put(PASSWORD_KEY, password);
         credentials.put(DATABASE_KEY, DEFAULT_DATABASE);
         credentials.put(DATABASE_KEY2, DEFAULT_DATABASE);
         credentials.put(DATABASE_KEY3, DEFAULT_DATABASE);
+        credentials.put(MONGODB_URI_KEY, svrAddress.concat("/test?retryWrites=true"));
         credentials.put(PROJECT_ID_KEY,projectId);
         return credentials;
 

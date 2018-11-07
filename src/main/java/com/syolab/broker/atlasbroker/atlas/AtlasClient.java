@@ -34,7 +34,7 @@ public class AtlasClient {
 
     final private String dashBoardUrlPrefix = "https://cloud.mongodb.com/v2/";
     final private String rootEndpoint;
-
+    final private String natIp;
     final private String apiKey;
 
     private String orgId;
@@ -51,12 +51,14 @@ public class AtlasClient {
     AtlasClient(@Value("${mongodb.atlas.rootEndpoint}") final String rootEndpoint,
                 @Value("${mongodb.atlas.username}") final String userName,
                 @Value("${mongodb.atlas.apiKey}") final String apiKey,
-                @Value("${mongodb.atlas.orgId}") final String orgId) {
+                @Value("${mongodb.atlas.orgId}") final String orgId,
+                @Value("${mongodb.atlas.natIp}") final String natIp) {
 
         this.rootEndpoint = rootEndpoint;
         this.apiKey = apiKey;
         this.userName = userName;
         this.orgId = orgId;
+        this.natIp = natIp;
 
         HttpHost host = new HttpHost(rootEndpoint);
         CredentialsProvider provider = new BasicCredentialsProvider();
@@ -72,6 +74,34 @@ public class AtlasClient {
         restTemplate = new RestTemplate(requestFactory);
     }
 
+    public void configureIpWhitelist(String projectId) throws AtlasException{
+
+        String resourceUrl = rootEndpoint + "/groups/"+ projectId + "/whitelist?pretty=true";
+        log.info("resourceUrl = " + resourceUrl);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        JSONArray entries = new JSONArray();
+        JSONObject entry = new JSONObject();
+        entry.put("ipAddress",natIp);
+        entry.put("comment","IP Address of the NAT VM set by the Service Broker for Atlas");
+        entries.put(entry);
+
+        log.debug("request:" +  entries);
+        try {
+            HttpEntity<String> httpEntity = new HttpEntity<String>(entries.toString(), headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(resourceUrl, httpEntity, String.class);
+            log.info("Status Code = " + response.getStatusCode());
+            log.info("Response: " + response);
+
+        }catch(HttpClientErrorException exception){
+            exception.printStackTrace();
+            throw new AtlasException(exception.getMessage(),exception);
+        }
+
+
+    }
 
     public String createProject(String projectName, String orgId) throws AtlasException {
         log.info("Creating a new Project: " + projectName + ",orgId:" +orgId);
@@ -107,6 +137,7 @@ public class AtlasClient {
         try {
 
             String projectId = createProject("PCF-"+instanceId, orgId);
+            configureIpWhitelist(projectId);
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             String resourceUrl = rootEndpoint + "/groups/"+ projectId + "/clusters";
@@ -132,12 +163,12 @@ public class AtlasClient {
         }catch (ParseException e){
             log.error(e.getMessage());
             e.printStackTrace();
-            throw new AtlasException("Unable to load the plan definition:" + planId, e);
+            throw new AtlasException("Unable to create the cluster:" + planId, e);
         }
         catch (IOException e){
             log.error(e.getMessage());
             e.printStackTrace();
-            throw new AtlasException("Unable to load the plan definition:" + planId, e);
+            throw new AtlasException("Unable to create the cluster:" + planId, e);
         }
         catch(HttpClientErrorException exception){
             exception.printStackTrace();
@@ -209,7 +240,7 @@ public class AtlasClient {
 
         log.debug("getClusterInfo : " + clusterData);
         String body = clusterData.getString("body");
-        return new JSONObject(body).getString("mongoURIWithOptions");
+        return new JSONObject(body).getString("srvAddress");
 
     }
 
@@ -239,8 +270,26 @@ public class AtlasClient {
         dbRole.put("databaseName","admin");
         dbRole.put("roleName","atlasAdmin");
 
+        //readWrite
+        JSONObject readWriteRole = new JSONObject();
+        readWriteRole.put("databaseName","admin");
+        readWriteRole.put("roleName","readWrite");
+
+        //dbAdmin
+        JSONObject dbAdminRole = new JSONObject();
+        dbAdminRole.put("databaseName","admin");
+        dbAdminRole.put("roleName","dbAdmin");
+
+        //userAdmin
+        JSONObject userAdminRole = new JSONObject();
+        userAdminRole.put("databaseName","admin");
+        userAdminRole.put("roleName","userRole");
+
         roles.put(dbRole);
+
         request.put("roles",roles);
+
+
 
         request.put("databaseName","admin");
 
