@@ -29,8 +29,6 @@ public class AtlasServiceInstanceBindingService  implements ServiceInstanceBindi
     private static final String PASSWORD_KEY = "password";
     private static final String PROJECT_ID_KEY = "groupId";
     private static final String DATABASE_KEY = "database";
-    private static final String DATABASE_KEY2 = "dbname";
-    private static final String DATABASE_KEY3 = "db";
     private static final String MONGODB_URI_KEY = "mongodbUri";
     private static final String URI_KEY = "uri";
 
@@ -139,8 +137,6 @@ public class AtlasServiceInstanceBindingService  implements ServiceInstanceBindi
         credentials.put(USERNAME_KEY, instanceId);
         credentials.put(PASSWORD_KEY, password);
         credentials.put(DATABASE_KEY, DEFAULT_DATABASE);
-        credentials.put(DATABASE_KEY2, DEFAULT_DATABASE);
-        credentials.put(DATABASE_KEY3, DEFAULT_DATABASE);
         credentials.put(MONGODB_URI_KEY, svrAddress.concat("/test?retryWrites=true"));
         credentials.put(PROJECT_ID_KEY,projectId);
         return credentials;
