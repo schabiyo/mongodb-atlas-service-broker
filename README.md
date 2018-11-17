@@ -171,10 +171,13 @@ A user will be create with the Atlas admin role.
 To demonstrate this, we will use the reference application [spring-music](https://github.com/cloudfoundry-samples/spring-music).
 
 **bind the service instance to the application**
+```
 $ cf bind-service spring-music mongo-dev
+```
 **restart the application so the new service is detected**
+```
 $ cf restart
-
+```
 **Check the cluster credentials has been populated**
 ```
 $ cf env spring-music 
