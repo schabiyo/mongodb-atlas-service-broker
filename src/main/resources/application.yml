@@ -1,9 +1,10 @@
 mongodb:
   atlas:
      rootEndpoint: https://cloud.mongodb.com/api/atlas/v1.0
-     orgId: xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-     apiKey: xxxxxxx-xxxx-xxxx-xxxxx-xxxxxxx
+     orgId: xxxxxxf20bd66xxx765d52bf
+     apiKey: xxxxx-4535-xxxx-8e8b-xxxxxxx
      username: sani.chabi-yo
+     natIp: 10.18.110.1
 
 
 spring:
@@ -12,15 +13,6 @@ spring:
       ddl-auto: update
     show-sql: false
   cloud:
-    config:
-      enabled: true
-      uri: http://localhost:8080
-      server:
-        git:
-          uri: https://github.com/schabiyo/mongodb-atlas-service-broker
-          searchPaths: catalog-config
-          force-pull: true
-          skipSslValidation: true
     openservicebroker:
       catalog:
         services:
@@ -37,7 +29,7 @@ spring:
             name: aws-dev
             bindable: true
             free: true
-            description: Please use this for Dev (This is a multinenant environment)
+            description: Please use this for Dev (This is a multitenant environment)
           - id: aws-qa
             name: aws-qa
             bindable: true
@@ -45,7 +37,7 @@ spring:
           - id: aws-prod
             name: aws-prod
             bindable: true
-            description: Please use this for any Production deploiement
+            description: Please use this for any Production deployment
           - id: aws-global_cluster
             name: aws-global_cluster
             bindable: true
