@@ -1,5 +1,5 @@
 # A Cloud Foundry Service broker for MongoDB Atlas
-Base application to demonstrate MongoDB Atlas Service Broker
+This is a base application to demonstrate a Service Broker implementation for MongoDB Atlas
 
 
 ## Introduction
